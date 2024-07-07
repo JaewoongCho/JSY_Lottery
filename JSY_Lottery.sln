@@ -1,0 +1,29 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34728.123
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JSY_Lottery", "JSY_Lottery.csproj", "{FAF0B1D6-4DD7-400D-B172-A76BF5F442B8}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "JSY_Lottery_Installer", "..\JSY_Lottery_Installer\JSY_Lottery_Installer.vdproj", "{1C7313CE-277F-42CB-95D9-6978B6E1014F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FAF0B1D6-4DD7-400D-B172-A76BF5F442B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FAF0B1D6-4DD7-400D-B172-A76BF5F442B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FAF0B1D6-4DD7-400D-B172-A76BF5F442B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FAF0B1D6-4DD7-400D-B172-A76BF5F442B8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1C7313CE-277F-42CB-95D9-6978B6E1014F}.Debug|Any CPU.ActiveCfg = Debug
+		{1C7313CE-277F-42CB-95D9-6978B6E1014F}.Release|Any CPU.ActiveCfg = Release
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2C4FEF3A-E0EE-47CE-A944-DA521A200AED}
+	EndGlobalSection
+EndGlobal
