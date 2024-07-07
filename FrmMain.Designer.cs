@@ -311,7 +311,7 @@
             // 
             // panel1
             // 
-            panel1.BackgroundImage = Properties.Resources.seoki;
+            panel1.BackgroundImage = Properties.Resources.pray;
             panel1.BackgroundImageLayout = ImageLayout.Stretch;
             panel1.Dock = DockStyle.Fill;
             panel1.Location = new Point(0, 0);
@@ -322,7 +322,7 @@
             // 
             // panel2
             // 
-            panel2.BackgroundImage = Properties.Resources.wonny;
+            panel2.BackgroundImage = Properties.Resources.luck;
             panel2.BackgroundImageLayout = ImageLayout.Stretch;
             panel2.Dock = DockStyle.Fill;
             panel2.Location = new Point(219, 0);
@@ -403,7 +403,7 @@
             // 
             // panel3
             // 
-            panel3.BackgroundImage = Properties.Resources.wonny;
+            panel3.BackgroundImage = Properties.Resources.pray;
             panel3.BackgroundImageLayout = ImageLayout.Stretch;
             panel3.Dock = DockStyle.Fill;
             panel3.Location = new Point(0, 0);
@@ -414,7 +414,7 @@
             // 
             // panel4
             // 
-            panel4.BackgroundImage = Properties.Resources.seoki;
+            panel4.BackgroundImage = Properties.Resources.luck;
             panel4.BackgroundImageLayout = ImageLayout.Stretch;
             panel4.Dock = DockStyle.Fill;
             panel4.Location = new Point(219, 0);

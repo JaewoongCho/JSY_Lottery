@@ -183,7 +183,7 @@
             TxtMarquee.Name = "TxtMarquee";
             TxtMarquee.Size = new Size(335, 23);
             TxtMarquee.TabIndex = 3;
-            TxtMarquee.Text = "석시원과 함께하는 라방토크쑈~ 다같이 모두 즐기쑈쑈";
+            TxtMarquee.Text = "흐름글 테스트";
             // 
             // TxtMFont
             // 

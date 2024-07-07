@@ -93,6 +93,16 @@ namespace JSY_Lottery.Properties {
         /// <summary>
         ///   System.Drawing.Bitmap 형식의 지역화된 리소스를 찾습니다.
         /// </summary>
+        internal static System.Drawing.Bitmap luck {
+            get {
+                object obj = ResourceManager.GetObject("luck", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   System.Drawing.Bitmap 형식의 지역화된 리소스를 찾습니다.
+        /// </summary>
         internal static System.Drawing.Bitmap mActionRefresh {
             get {
                 object obj = ResourceManager.GetObject("mActionRefresh", resourceCulture);
@@ -106,6 +116,16 @@ namespace JSY_Lottery.Properties {
         internal static System.Drawing.Bitmap mActionReload {
             get {
                 object obj = ResourceManager.GetObject("mActionReload", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   System.Drawing.Bitmap 형식의 지역화된 리소스를 찾습니다.
+        /// </summary>
+        internal static System.Drawing.Bitmap pray {
+            get {
+                object obj = ResourceManager.GetObject("pray", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
