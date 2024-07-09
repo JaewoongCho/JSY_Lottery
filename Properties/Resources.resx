@@ -127,17 +127,11 @@
   <data name="mActionReload" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\images\mActionReload.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="wonny" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\images\wonny.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="vector_grid" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\images\vector_grid.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="btn_back" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\images\btn_back.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="seoki" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\images\seoki.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="system" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\images\system.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>

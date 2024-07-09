@@ -133,16 +133,6 @@ namespace JSY_Lottery.Properties {
         /// <summary>
         ///   System.Drawing.Bitmap 형식의 지역화된 리소스를 찾습니다.
         /// </summary>
-        internal static System.Drawing.Bitmap seoki {
-            get {
-                object obj = ResourceManager.GetObject("seoki", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   System.Drawing.Bitmap 형식의 지역화된 리소스를 찾습니다.
-        /// </summary>
         internal static System.Drawing.Bitmap system {
             get {
                 object obj = ResourceManager.GetObject("system", resourceCulture);
@@ -156,16 +146,6 @@ namespace JSY_Lottery.Properties {
         internal static System.Drawing.Bitmap vector_grid {
             get {
                 object obj = ResourceManager.GetObject("vector_grid", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   System.Drawing.Bitmap 형식의 지역화된 리소스를 찾습니다.
-        /// </summary>
-        internal static System.Drawing.Bitmap wonny {
-            get {
-                object obj = ResourceManager.GetObject("wonny", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
