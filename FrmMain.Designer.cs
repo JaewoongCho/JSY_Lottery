@@ -520,8 +520,6 @@
         private Panel panel7;
         private TextBox StrRandom;
         private Button BtnReverse;
-        private Button button4;
-        private Button button3;
         private Button BtnReverseAll;
         private Button BtnConfig;
         private Button BtnReset;

@@ -13,16 +13,16 @@ namespace JSY_Lottery
     public partial class FrmMain : Form
     {
         private int pX;
-        private int pY;
+        readonly private int pY;
         private int maxPapers;
         private int cols, rows;
         private bool first_draw = true;
-        private float defaultFontSize = 12F;
+        readonly private float defaultFontSize = 12F;
         public SqliteConnection configConn;
         public SqliteConnection benefitConn;
-        private ArrayList benefits = new ArrayList();
-        private ArrayList openedPaper = new ArrayList();
-        private ArrayList closedPaper = new ArrayList();
+        readonly private ArrayList benefits = new();
+        readonly private ArrayList openedPaper = new();
+        readonly private ArrayList closedPaper = new();
         private bool isRandomCount = false;
 
         private Color boardColor = Color.White;
@@ -36,49 +36,49 @@ namespace JSY_Lottery
         private Color resultFontColor = Color.Black;
         private string marqueeText = "흐름글 테스트 입니다...";
         private int marqueeSpeed = 10;
-        private Font paperFont = new Font("맑은 고딕", 10F);
-        private Font marqueeFont = new Font("맑은 고딕", 16F);
-        private Font listFont = new Font("맑은 고딕", 10F);
-        private Font resultFont = new Font("맑은 고딕", 10F);
-        private WindowsMediaPlayer wmp = new WindowsMediaPlayer();
+        private Font paperFont = new("맑은 고딕", 10F);
+        private Font marqueeFont = new("맑은 고딕", 16F);
+        private Font listFont = new("맑은 고딕", 10F);
+        private Font resultFont = new("맑은 고딕", 10F);
+        readonly private WindowsMediaPlayer wmp = new();
 
-        Dictionary<int, ArrayList> dic = new Dictionary<int, ArrayList>();
-        Dictionary<string, int> benefitDic = new Dictionary<string, int>();
+        readonly Dictionary<int, ArrayList> dic = new();
+        Dictionary<string, int> benefitDic = new();
 
-        private void CheckConfigFile()
+        private static void CheckConfigFile()
         {
-            DirectoryInfo dirInfo = new DirectoryInfo(Application.StartupPath + @"resources");
+            DirectoryInfo dirInfo = new(Application.StartupPath + @"resources");
 
             if(!dirInfo.Exists )
             {
                 dirInfo.Create();
             }
 
-            FileInfo configInfo = new FileInfo(Application.StartupPath + @"resources\lottery_config.db");
-            FileInfo benefitInfo = new FileInfo(Application.StartupPath + @"resources\lottery_benefit.db");
+            FileInfo configInfo = new(Application.StartupPath + @"resources\lottery_config.db");
+            FileInfo benefitInfo = new(Application.StartupPath + @"resources\lottery_benefit.db");
 
             if (configInfo.Exists == false)
             {
                 MessageBox.Show("Config 파일이 없어 새로 생성합니다.", "프로그램 실행 정보", MessageBoxButtons.OK);
                 // DB 생성하고
-                File.WriteAllBytes(configInfo.FullName, new byte[0]);
+                File.WriteAllBytes(configInfo.FullName, Array.Empty<byte>());
             }
 
             if (benefitInfo.Exists == false)
             {
                 MessageBox.Show("Benefit 파일이 없어 새로 생성합니다.", "프로그램 실행 정보", MessageBoxButtons.OK);
                 // DB 생성하고
-                File.WriteAllBytes(benefitInfo.FullName, new byte[0]);
+                File.WriteAllBytes(benefitInfo.FullName, Array.Empty<byte>());
             }
         }
 
-        public static bool tableAlreadyExists(SqliteConnection openConnection, string tableName)
+        public static bool IsTableAlreadyExists(SqliteConnection openConnection, string tableName)
         {
             var sql =
             "SELECT name FROM sqlite_master WHERE type='table' AND name='" + tableName + "';";
             if (openConnection.State == System.Data.ConnectionState.Open)
             {
-                SqliteCommand command = new SqliteCommand(sql, openConnection);
+                SqliteCommand command = new(sql, openConnection);
                 SqliteDataReader reader = command.ExecuteReader();
                 if (reader.HasRows)
                 {
@@ -93,18 +93,17 @@ namespace JSY_Lottery
 
         private void CheckTables()
         {
-            if(!tableAlreadyExists(configConn, "tbConfig"))
+            if(!IsTableAlreadyExists(configConn, "tbConfig"))
             {
-                string sql = "CREATE TABLE \"tbConfig\"(\"configName\"  TEXT,\"configValue\"    TEXT)";
-                // you could also write sql = "CREATE TABLE IF NOT EXISTS highscores ..."
-                SqliteCommand cmd = new SqliteCommand(sql, configConn);
+                string sql = @"CREATE TABLE ""tbConfig""(""configName""  TEXT,""configValue""    TEXT)";
+                SqliteCommand cmd = new(sql, configConn);
                 cmd.ExecuteNonQuery();
             }
 
-            if(!tableAlreadyExists(benefitConn, "tbBenefit"))
+            if(!IsTableAlreadyExists(benefitConn, "tbBenefit"))
             {
-                string sql = "CREATE TABLE \"tbBenefit\" (\"seq\"	INTEGER,\"benefit_name\"	TEXT,\"benefit_count\"	INTEGER,\"benefit_desc\"	TEXT, \"benefit_sound\"	TEXT)";
-                SqliteCommand cmd = new SqliteCommand(sql, benefitConn);
+                string sql = @"CREATE TABLE ""tbBenefit"" (""seq""	INTEGER,""benefit_name""	TEXT,""benefit_count""	INTEGER,""benefit_desc""	TEXT, ""benefit_sound""	TEXT)";
+                SqliteCommand cmd = new(sql, benefitConn);
                 cmd.ExecuteNonQuery();
             }
         }
@@ -112,20 +111,20 @@ namespace JSY_Lottery
         public FrmMain()
         {
             InitializeComponent();
-            pX = this.PnlMarquee.Width;
-            pY = (this.PnlMarquee.Height - this.LblMarquee.Font.Height) / 2;
+            this.pX = this.PnlMarquee.Width;
+            this.pY = (this.PnlMarquee.Height - this.LblMarquee.Font.Height) / 2;
 
             CheckConfigFile();
             SQLitePCL.raw.SetProvider(new SQLitePCL.SQLite3Provider_e_sqlite3());
-            configConn = new SqliteConnection("Data Source=" + Application.StartupPath + @"resources\lottery_config.db");
-            configConn.Open();
-            benefitConn = new SqliteConnection("Data Source=" + Application.StartupPath + @"resources\lottery_benefit.db");
-            benefitConn.Open();
+            this.configConn = new SqliteConnection("Data Source=" + Application.StartupPath + @"resources\lottery_config.db");
+            this.configConn.Open();
+            this.benefitConn = new SqliteConnection("Data Source=" + Application.StartupPath + @"resources\lottery_benefit.db");
+            this.benefitConn.Open();
 
             CheckTables();
         }
 
-        private void drawMarquee()
+        private void DrawMarquee()
         {
             this.TmrMarquee.Stop();
             LblMarquee.Text = marqueeText;
@@ -137,66 +136,77 @@ namespace JSY_Lottery
             this.TmrMarquee.Start();
         }
 
-        private void drawBenefit()
+        private void DrawBenefit()
         {
-            dic.Clear();
-
-            string sql = "SELECT benefit_name, benefit_count, benefit_desc, benefit_sound  FROM tbBenefit ORDER BY seq ASC";
-            SqliteCommand cmd = new SqliteCommand(sql, benefitConn);
-            SqliteDataReader rdr = cmd.ExecuteReader();
-            int rowCount = 0;
-            maxPapers = 0;
-            benefitDic.Clear();
-            while (rdr.Read())
+            try
             {
-                ArrayList arrayList = new ArrayList()
+                this.dic.Clear();
+
+                string sql = "SELECT benefit_name, benefit_count, benefit_desc, benefit_sound  FROM tbBenefit ORDER BY seq ASC";
+                SqliteCommand cmd = new(sql, benefitConn);
+                SqliteDataReader rdr = cmd.ExecuteReader();
+                int rowCount = 0;
+                this.maxPapers = 0;
+                this.benefitDic.Clear();
+                
+                while (rdr?.Read() ?? throw new ArgumentException("DataReader is Null"))
                 {
-                    rdr[0], rdr[1], rdr[2], (rdr[3] is DBNull ? "" : rdr[3])
-                };
-                dic.Add(rowCount++, arrayList);
-                maxPapers += Convert.ToInt32(rdr[1]);
-                for (int i = 0; i < Convert.ToInt32(rdr[1]); i++)
-                {
-                    benefits.Add(rdr[0]);
+                    ArrayList arrayList = new()
+                    {
+                        rdr[0], rdr[1], rdr[2], rdr[3] ?? ""
+                    };
+                    this.dic.Add(rowCount++, arrayList);
+                    this.maxPapers += Convert.ToInt32(rdr[1]);
+                    for (int i = 0; i < Convert.ToInt32(rdr[1]); i++)
+                    {
+                        this.benefits.Add(rdr[0]);
+                    }
+                    this.benefitDic.Add(rdr?[0]?.ToString() ?? "", 0);
                 }
-                benefitDic.Add(rdr[0].ToString(), 0);
+
+                int benefitCount = dic.Count;
+
+                DataTable benefitDt = new();
+                benefitDt.Columns.Add("경품명", typeof(string));
+                benefitDt.Columns.Add("개수", typeof(string));
+                benefitDt.Columns.Add("경품설명", typeof(string));
+
+                foreach (int key in dic.Keys)
+                {
+                    ArrayList lst = dic[key];
+                    if (lst is not null)
+                    {
+                        // 여기에 한번 다시 추가해보자.
+                        DataRow dr = benefitDt.NewRow();
+                        if(lst.Count == 4)
+                        {
+                            dr[0] = lst[0]?.ToString();
+                            dr[1] = lst[1]?.ToString() + "개";
+                            dr[2] = lst[2]?.ToString();
+                            benefitDt.Rows.Add(dr);
+                        }
+                    }
+                }
+
+                DgvBenefit.DataSource = benefitDt;
+                DgvBenefit.DefaultCellStyle.Font = listFont;
+                DgvBenefit.DefaultCellStyle.ForeColor = listFontColor;
+                DgvBenefit.DefaultCellStyle.BackColor = listColor;
+                DgvBenefit.BackgroundColor = listColor;
+                DgvBenefit.DefaultCellStyle.SelectionForeColor = listFontColor;
+                DgvBenefit.DefaultCellStyle.SelectionBackColor = listColor;
+                DgvBenefit.Refresh();
             }
-
-            int benefitCount = dic.Count;
-
-            DataTable benefitDt = new DataTable();
-            benefitDt.Columns.Add("경품명", typeof(string));
-            benefitDt.Columns.Add("개수", typeof(string));
-            benefitDt.Columns.Add("경품설명", typeof(string));
-
-            foreach (int key in dic.Keys)
+            catch(Exception)
             {
-                ArrayList lst = dic[key];
-                if (lst is not null)
-                {
-                    // 여기에 한번 다시 추가해보자.
-                    DataRow dr = benefitDt.NewRow();
-                    dr[0] = lst[0].ToString();
-                    dr[1] = lst[1].ToString() + "개";
-                    dr[2] = lst[2].ToString();
-                    benefitDt.Rows.Add(dr);
-                }
+                
             }
-
-            DgvBenefit.DataSource = benefitDt;
-            DgvBenefit.DefaultCellStyle.Font = listFont;
-            DgvBenefit.DefaultCellStyle.ForeColor = listFontColor;
-            DgvBenefit.DefaultCellStyle.BackColor = listColor;
-            DgvBenefit.BackgroundColor = listColor;
-            DgvBenefit.DefaultCellStyle.SelectionForeColor = listFontColor;
-            DgvBenefit.DefaultCellStyle.SelectionBackColor = listColor;
-            DgvBenefit.Refresh();
         }
 
-        private void initConfig()
+        private void InitConfig()
         {
             string sql = "SELECT * FROM tbConfig";
-            SqliteCommand cmd = new SqliteCommand(sql, configConn);
+            SqliteCommand cmd = new(sql, configConn);
             SqliteDataReader rdr = cmd.ExecuteReader();
 
             string paperFontFamily = "맑은 고딕", marqueeFontFamily = "맑은 고딕", listFontFamily = "맑은 고딕", resultFontFamily = "맑은 고딕";
@@ -209,28 +219,28 @@ namespace JSY_Lottery
             while (rdr.Read())
             {
                 string name = rdr.GetString(0);
-                int color = -1;
+                int color;
 
                 switch (name)
                 {
                     case "marqueeText":
-                        marqueeText = rdr.GetString(1);
+                        this.marqueeText = rdr.GetString(1);
                         break;
                     case "marqueeSpeed":
-                        marqueeSpeed = rdr.GetInt32(1);
+                        this.marqueeSpeed = rdr.GetInt32(1);
                         break;
                     case "boardColor":
                         color = rdr.GetInt32(1);
-                        boardColor = Color.FromArgb(color);
+                        this.boardColor = Color.FromArgb(color);
                         TlpLottery.BackColor = boardColor;
                         break;
                     case "paperColor":
                         color = rdr.GetInt32(1);
-                        paperColor = Color.FromArgb(color);
+                        this.paperColor = Color.FromArgb(color);
                         break;
                     case "paperFontColor":
                         color = rdr.GetInt32(1);
-                        paperFontColor = Color.FromArgb(color);
+                        this.paperFontColor = Color.FromArgb(color);
                         break;
                     case "paperFontFamily":
                         paperFontFamily = rdr.GetString(1);
@@ -252,7 +262,7 @@ namespace JSY_Lottery
                         break;
                     case "marqueeFontColor":
                         color = rdr.GetInt32(1);
-                        marqueeFontColor = Color.FromArgb(color);
+                        this.marqueeFontColor = Color.FromArgb(color);
                         break;
                     case "marqueeFontFamily":
                         marqueeFontFamily = rdr.GetString(1);
@@ -332,19 +342,19 @@ namespace JSY_Lottery
                 }
             }
 
-            paperFont = new Font(paperFontFamily, paperFontSize, (paperFontBold ? FontStyle.Bold : FontStyle.Regular) |
+            paperFont = new(paperFontFamily, paperFontSize, (paperFontBold ? FontStyle.Bold : FontStyle.Regular) |
                 (paperFontItalic ? FontStyle.Italic : FontStyle.Regular) | (paperFontUnderline ? FontStyle.Underline : FontStyle.Regular) |
                 (paperFontStrikeout ? FontStyle.Strikeout : FontStyle.Regular));
 
-            marqueeFont = new Font(marqueeFontFamily, marqueeFontSize, (marqueeFontBold ? FontStyle.Bold : FontStyle.Regular) |
+            marqueeFont = new(marqueeFontFamily, marqueeFontSize, (marqueeFontBold ? FontStyle.Bold : FontStyle.Regular) |
                 (marqueeFontItalic ? FontStyle.Italic : FontStyle.Regular) | (marqueeFontUnderline ? FontStyle.Underline : FontStyle.Regular) |
                 (marqueeFontStrikeout ? FontStyle.Strikeout : FontStyle.Regular));
 
-            listFont = new Font(listFontFamily, listFontSize, (listFontBold ? FontStyle.Bold : FontStyle.Regular) |
+            listFont = new(listFontFamily, listFontSize, (listFontBold ? FontStyle.Bold : FontStyle.Regular) |
                 (listFontItalic ? FontStyle.Italic : FontStyle.Regular) | (listFontUnderline ? FontStyle.Underline : FontStyle.Regular) |
                 (listFontStrikeout ? FontStyle.Strikeout : FontStyle.Regular));
 
-            resultFont = new Font(resultFontFamily, resultFontSize, (resultFontBold ? FontStyle.Bold : FontStyle.Regular) |
+            resultFont = new(resultFontFamily, resultFontSize, (resultFontBold ? FontStyle.Bold : FontStyle.Regular) |
                 (resultFontItalic ? FontStyle.Italic : FontStyle.Regular) | (resultFontUnderline ? FontStyle.Underline : FontStyle.Regular) |
                 (resultFontStrikeout ? FontStyle.Strikeout : FontStyle.Regular));
 
@@ -359,11 +369,11 @@ namespace JSY_Lottery
         private void FrmMain_Load(object sender, EventArgs e)
         {
             // DB에서 설정관련 정보 읽어와서 설정하기
-            initConfig();
+            InitConfig();
 
             // DB에서 일단 등수관련 정보 읽어오기
-            drawBenefit();
-            drawMarquee();
+            DrawBenefit();
+            DrawMarquee();
             DrawPapers();
             InitLotteryLayout();
         }
@@ -388,19 +398,17 @@ namespace JSY_Lottery
             {
                 string text = obj.Text;
                 var size = default(SizeF);
-                obj.Font = new Font(obj.Font.Name, defaultFontSize, FontStyle.Bold);
+                obj.Font = new(obj.Font.Name, defaultFontSize, FontStyle.Bold);
                 do
                 {
-                    using (var font = new Font(obj.Font.Name, obj.Font.SizeInPoints, FontStyle.Bold))
-                    {
-                        size = TextRenderer.MeasureText(text, font);
+                    using Font font = new(obj.Font.Name, obj.Font.SizeInPoints, FontStyle.Bold);
+                    size = TextRenderer.MeasureText(text, font);
 
-                        if (size.Width <= obj.Width)
-                            obj.Text = text;
-                        else
-                        {
-                            obj.Font = new Font(font.Name, font.SizeInPoints - 1f, FontStyle.Bold);
-                        }
+                    if (size.Width <= obj.Width)
+                        obj.Text = text;
+                    else
+                    {
+                        obj.Font = new(font.Name, font.SizeInPoints - 1f, FontStyle.Bold);
                     }
                 } while (size.Width > obj.Width);
             }
@@ -433,7 +441,7 @@ namespace JSY_Lottery
             TlpLottery.ColumnCount = cols;
 
             int countPaper = 0;
-            Random rnd = new Random();
+            Random rnd = new();
 
             float itemWidth = TlpLottery.Width / (float)cols;
             float itemHeight = TlpLottery.Height / (float)rows;
@@ -458,7 +466,7 @@ namespace JSY_Lottery
 
                     if (countPaper > this.maxPapers)
                     {
-                        Label lbl = new Label
+                        Label lbl = new()
                         {
                             Text = ""
                         };
@@ -467,7 +475,7 @@ namespace JSY_Lottery
                     {
                         string paperName = "Paper" + countPaper;
                         closedPaper.Add(paperName);
-                        Button btn = new Button
+                        Button btn = new()
                         {
                             Name = paperName,
                             Width = TlpLottery.Width / cols,
@@ -490,8 +498,11 @@ namespace JSY_Lottery
                         // 등수를 뽑고, arrayList를 만들어서 태그에다가 넣기
                         int numb = rnd.Next(benefits.Count);
 
-                        string benefit = benefits[numb].ToString();
-                        benefits.RemoveAt(numb);
+                        string benefit = benefits[numb]?.ToString() ?? string.Empty;
+                        if(!string.IsNullOrEmpty(benefit))
+                        {
+                            benefits.RemoveAt(numb);
+                        }
 
                         btn.Tag = new ArrayList { benefit, false };
                         btn.Click += Btn_Click;
@@ -510,82 +521,98 @@ namespace JSY_Lottery
 
         private void Btn_Click(object? sender, EventArgs e)
         {
-            Button? b = (Button?)sender;
-            ArrayList benefitValue = b.Tag as ArrayList;
-
-            if (b is not null && !(bool)benefitValue[1])
+            try
             {
-                // true로 변경하고 tag 업데이트
-                benefitValue[1] = true;
-                b.Tag = benefitValue;
-                string text = benefitValue[0].ToString();
-                b.Text = text;
-                b.BackColor = Color.Silver;
-                var size = default(SizeF);
-                do
+                Button b = sender as Button ?? throw new ArgumentException("Button is null");
+                ArrayList benefitValue = b.Tag as ArrayList ?? throw new ArgumentException("Benefit Value is null");
+
+                if (benefitValue.Count == 2)
                 {
-                    using (var font = new Font(b.Font.Name, b.Font.SizeInPoints, FontStyle.Bold))
+                    if (benefitValue[1] is bool hasValue)
                     {
-                        size = TextRenderer.MeasureText(text, font);
-
-                        if (size.Width <= b.Width)
-                            b.Text = text;
-                        else
+                        if (!hasValue)
                         {
-                            b.Font = new Font(font.Name, font.SizeInPoints - 1f, FontStyle.Bold);
-                        }
-                    }
-                } while (size.Width > b.Width);
-
-                closedPaper.Remove(b.Name);
-                openedPaper.Add(b.Name);
-
-                if (!isRandomCount)
-                {
-                    // 소리 재생
-                    for (int i = 0; i < dic.Count; i++)
-                    {
-                        if (dic[i][0].ToString() == text)
-                        {
-                            string soundPath = dic[i][3].ToString();
-                            if (soundPath != "")
+                            benefitValue[1] = true;
+                            b.Tag = benefitValue;
+                            if (benefitValue[0] is string text)
                             {
-                                Debug.WriteLine(soundPath);
-                                wmp.URL = soundPath;
-                                wmp.controls.play();
+                                b.Text = text;
+                                b.BackColor = Color.Silver;
+                                var size = default(SizeF);
+                                do
+                                {
+                                    using Font font = new(b.Font.Name, b.Font.SizeInPoints, FontStyle.Bold);
+                                    size = TextRenderer.MeasureText(text, font);
+
+                                    if (size.Width <= b.Width)
+                                        b.Text = text;
+                                    else
+                                    {
+                                        b.Font = new(font.Name, font.SizeInPoints - 1f, FontStyle.Bold);
+                                    }
+                                } while (size.Width > b.Width);
+
+                                closedPaper.Remove(b.Name);
+                                openedPaper.Add(b.Name);
+
+                                if (!isRandomCount)
+                                {
+                                    // 소리 재생
+                                    for (int i = 0; i < dic.Count; i++)
+                                    {
+                                        if (dic[i].Count == 4 && dic[i][0] != null)
+                                        {
+                                            if (dic[i][0]?.ToString() == text)
+                                            {
+                                                string soundPath = dic[i][3]?.ToString() ?? string.Empty;
+                                                if (!string.IsNullOrEmpty(soundPath))
+                                                {
+                                                    Debug.WriteLine(soundPath);
+                                                    wmp.URL = soundPath;
+                                                    wmp.controls.play();
+                                                }
+                                                break;
+                                            }
+                                        }
+                                    }
+                                    // 결과판에 출력
+                                    StringBuilder sb = new();
+                                    sb.Append(text);
+                                    sb.Append(" (");
+                                    ArrayList lst = dic.Where(item => item.Value.Contains(text)).Select(value => value.Value).First();
+                                    sb.Append(lst[2]);
+                                    sb.Append(')');
+                                    RtxResult.Text = sb.ToString();
+                                }
+                                else
+                                {
+                                    if (benefitDic.ContainsKey(text))
+                                    {
+                                        benefitDic[text] += 1;
+                                    }
+                                    else
+                                    {
+                                        benefitDic.Add(text, 1);
+                                    }
+                                }
+
+                                for (int i = 0; i < DgvBenefit.RowCount; i++)
+                                {
+                                    if (DgvBenefit.Rows[i].Cells[0].Value?.ToString() == text)
+                                    {
+                                        if(int.TryParse(DgvBenefit.Rows[i].Cells[1].Value.ToString()?.Replace("개", ""), out int nowCount))
+                                            DgvBenefit.Rows[i].Cells[1].Value = Convert.ToString(nowCount - 1) + "개";
+                                    }
+                                }
                             }
-                            break;
                         }
                     }
-                    // 결과판에 출력
-                    StringBuilder sb = new StringBuilder();
-                    sb.Append(text);
-                    sb.Append(" (");
-                    ArrayList lst = dic.Where(item => item.Value.Contains(text)).Select(value => value.Value).First();
-                    sb.Append(lst[2]);
-                    sb.Append(")");
-                    RtxResult.Text = sb.ToString();
                 }
-                else
-                {
-                    if (benefitDic.ContainsKey(text))
-                    {
-                        benefitDic[text] += 1;
-                    }
-                    else
-                    {
-                        benefitDic.Add(text, 1);
-                    }
-                }
-                
-                for (int i = 0; i < DgvBenefit.RowCount; i++)
-                {
-                    if (DgvBenefit.Rows[i].Cells[0].Value.ToString() == text)
-                    {
-                        int nowCount = int.Parse(DgvBenefit.Rows[i].Cells[1].Value.ToString().Replace("개", ""));
-                        DgvBenefit.Rows[i].Cells[1].Value = Convert.ToString(nowCount - 1) + "개";
-                    }
-                }
+            }
+            catch(Exception ex)
+            {
+                string methodName = System.Reflection.MethodBase.GetCurrentMethod()?.Name ?? "Btn_Click";
+                MessageBox.Show("[" + methodName + "] " + ex.Message);
             }
         }
 
@@ -598,20 +625,20 @@ namespace JSY_Lottery
                 {
                     string text = obj.Text;
                     var size = default(SizeF);
-                    obj.Font = new Font(obj.Font.Name, defaultFontSize, FontStyle.Bold);
+                    obj.Font = new(obj.Font.Name, defaultFontSize, FontStyle.Bold);
                     do
                     {
-                        using (var font = new Font(obj.Font.Name, obj.Font.SizeInPoints, FontStyle.Bold))
-                        {
-                            size = TextRenderer.MeasureText(text, font);
+                        using Font font = new(obj.Font.Name, obj.Font.SizeInPoints, FontStyle.Bold);
 
-                            if (size.Width <= obj.Width)
-                                obj.Text = text;
-                            else
-                            {
-                                obj.Font = new Font(font.Name, Math.Abs(font.SizeInPoints - 1f), FontStyle.Bold);
-                            }
+                        size = TextRenderer.MeasureText(text, font);
+
+                        if (size.Width <= obj.Width)
+                            obj.Text = text;
+                        else
+                        {
+                            obj.Font = new(font.Name, Math.Abs(font.SizeInPoints - 1f), FontStyle.Bold);
                         }
+
                     } while (size.Width > obj.Width);
                 }
             }
@@ -644,9 +671,10 @@ namespace JSY_Lottery
                     {
                         return;
                     }
+
                     // val은 이미 숫자 있음
                     isRandomCount = true;
-                    Random rnd = new Random();
+                    Random rnd = new();
                     foreach (string key in benefitDic.Keys)
                     {
                         benefitDic[key] = 0;
@@ -656,17 +684,19 @@ namespace JSY_Lottery
                     while(openedCount < paperCount)
                     {
                         Application.DoEvents();
-                        Random paperRnd = new Random();
-                        int p = paperRnd.Next(closedPaper.Count);
-                        bool isClicked = true;
-                        Control[] btn = TlpLottery.Controls.Find(closedPaper[p].ToString(), true);
-                        ArrayList lst = btn[0].Tag as ArrayList;
+                        Random paperRnd = new();
+                        int p = paperRnd.Next(closedPaper?.Count ?? 0);
+                        Control[] btn = TlpLottery.Controls.Find(closedPaper?[p]?.ToString(), true);
+                        ArrayList lst = btn[0]?.Tag as ArrayList ?? throw new ArgumentException("Tag is null");
 
-                        if ((bool)lst[1] == false)
+                        if (lst[1] is bool hasOpen)
                         {
-                            ((Button)btn[0]).PerformClick();
-                            openedCount++;
-                            Thread.Sleep(100);
+                            if (hasOpen == false)
+                            {
+                                ((Button)btn[0]).PerformClick();
+                                openedCount++;
+                                Thread.Sleep(100);
+                            }
                         }
                     }
 
@@ -698,18 +728,20 @@ namespace JSY_Lottery
             for (int i = paperCount; i > 0; i--)
             {
                 Application.DoEvents();
-                Random paperRnd = new Random();
+                Random paperRnd = new();
                 int p = paperRnd.Next(closedPaper.Count);
 
-                Control[] btn = TlpLottery.Controls.Find(closedPaper[p].ToString(), true);
+                Control[] btn = TlpLottery.Controls.Find(closedPaper[p]?.ToString(), true);
                 ((Button)btn[0]).PerformClick();
             }
         }
 
         private void BtnConfig_Click(object sender, EventArgs e)
         {
-            FrmConfig frm = new FrmConfig(ref configConn, ref benefitConn);
-            frm.Owner = this;
+            FrmConfig frm = new(ref configConn, ref benefitConn)
+            {
+                Owner = this
+            };
             frm.ShowDialog();
         }
 
@@ -733,7 +765,7 @@ namespace JSY_Lottery
                 TlpLottery.Controls.Clear();
                 RtxResult.Text = "";
 
-                drawBenefit();
+                DrawBenefit();
                 DrawPapers();
                 InitLotteryLayout();
             }
@@ -741,8 +773,8 @@ namespace JSY_Lottery
 
         public void ApplyConfig()
         {
-            initConfig();
-            drawMarquee();
+            InitConfig();
+            DrawMarquee();
 
             if (MessageBox.Show("뽑기판을 새로고치시겠습니까?", "새로고침 확인", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
@@ -758,7 +790,7 @@ namespace JSY_Lottery
                 TlpLottery.ColumnCount = 1;
 
                 RtxResult.Text = "";
-                drawBenefit();
+                DrawBenefit();
                 DrawPapers();
                 InitLotteryLayout();
             }

@@ -52,8 +52,8 @@
             BtnPColor = new Button();
             label2 = new Label();
             BtnPFont = new Button();
-            btnOK = new Button();
-            btnCancel = new Button();
+            BtnOK = new Button();
+            BtnCancel = new Button();
             ClgPaper = new ColorDialog();
             ClgBoard = new ColorDialog();
             FlgPaper = new FontDialog();
@@ -391,25 +391,25 @@
             BtnPFont.UseVisualStyleBackColor = true;
             BtnPFont.Click += BtnPFont_Click;
             // 
-            // btnOK
+            // BtnOK
             // 
-            btnOK.Location = new Point(529, 537);
-            btnOK.Name = "btnOK";
-            btnOK.Size = new Size(75, 23);
-            btnOK.TabIndex = 4;
-            btnOK.Text = "확인";
-            btnOK.UseVisualStyleBackColor = true;
-            btnOK.Click += btnOK_Click;
+            BtnOK.Location = new Point(529, 537);
+            BtnOK.Name = "BtnOK";
+            BtnOK.Size = new Size(75, 23);
+            BtnOK.TabIndex = 4;
+            BtnOK.Text = "확인";
+            BtnOK.UseVisualStyleBackColor = true;
+            BtnOK.Click += BtnOK_Click;
             // 
-            // btnCancel
+            // BtnCancel
             // 
-            btnCancel.Location = new Point(610, 537);
-            btnCancel.Name = "btnCancel";
-            btnCancel.Size = new Size(75, 23);
-            btnCancel.TabIndex = 5;
-            btnCancel.Text = "취소";
-            btnCancel.UseVisualStyleBackColor = true;
-            btnCancel.Click += btnCancel_Click;
+            BtnCancel.Location = new Point(610, 537);
+            BtnCancel.Name = "BtnCancel";
+            BtnCancel.Size = new Size(75, 23);
+            BtnCancel.TabIndex = 5;
+            BtnCancel.Text = "취소";
+            BtnCancel.UseVisualStyleBackColor = true;
+            BtnCancel.Click += BtnCancel_Click;
             // 
             // groupBox3
             // 
@@ -622,8 +622,8 @@
             ClientSize = new Size(694, 572);
             Controls.Add(groupBox5);
             Controls.Add(groupBox3);
-            Controls.Add(btnCancel);
-            Controls.Add(btnOK);
+            Controls.Add(BtnCancel);
+            Controls.Add(BtnOK);
             Controls.Add(groupBox4);
             Controls.Add(groupBox2);
             Controls.Add(groupBox1);
@@ -655,8 +655,8 @@
         private GroupBox groupBox2;
         private DataGridView DgvBenefit;
         private GroupBox groupBox4;
-        private Button btnOK;
-        private Button btnCancel;
+        private Button BtnOK;
+        private Button BtnCancel;
         private TableLayoutPanel tableLayoutPanel3;
         private TableLayoutPanel tableLayoutPanel2;
         private Label label3;
@@ -670,7 +670,6 @@
         private FontDialog FlgPaper;
         private FontDialog FlgMarquee;
         private TextBox TxtMarquee;
-        private Button button5;
         private Button BtnMColor;
         private Button BtnPColor;
         private Button BtnBColor;

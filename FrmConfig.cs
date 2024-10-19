@@ -14,13 +14,14 @@ namespace JSY_Lottery
 {
     public partial class FrmConfig : Form
     {
-        private SqliteConnection _configConn;
-        private SqliteConnection _benefitConn;
+        readonly private SqliteConnection ConfigConn;
+        readonly private SqliteConnection BenefitConn;
+
         public FrmConfig(ref SqliteConnection configConn, ref SqliteConnection benefitConnection)
         {
             InitializeComponent();
-            _configConn = configConn;
-            _benefitConn = benefitConnection;
+            this.ConfigConn = configConn;
+            this.BenefitConn = benefitConnection;
         }
 
         private void FrmConfig_Load(object sender, EventArgs e)
@@ -34,30 +35,31 @@ namespace JSY_Lottery
             DgvBenefit.Columns.Add("col4", "설명");
             DgvBenefit.Columns.Add("col5", "소리파일");
             // Config대로 일단 데이터 넣기
-            loadConfig();
-            loadBenefit();
+            LoadConfig();
+            LoadBenefit();
         }
 
-        private void loadConfig()
+        private void LoadConfig()
         {
             string sql = "SELECT * FROM tbConfig";
-            SqliteCommand cmd = new SqliteCommand(sql, _configConn);
+            SqliteCommand cmd = new(sql, ConfigConn);
             SqliteDataReader rdr = cmd.ExecuteReader();
 
-            string paperFontFamily = "맑은 고딕", marqueeFontFamily = "맑은 고딕", listFontFamily = "맑은 고딕", resultFontFamily = "맑은 고딕";
+            string paperFontFamily = "맑은 고딕";
+            string marqueeFontFamily = "맑은 고딕";
+            string listFontFamily = "맑은 고딕";
+            string resultFontFamily = "맑은 고딕";
             float paperFontSize = 10F, marqueeFontSize = 16F, listFontSize = 10F, resultFontSize = 10F;
             bool paperFontBold = false, paperFontItalic = false, paperFontUnderline = false, paperFontStrikeout = false;
             bool marqueeFontBold = false, marqueeFontItalic = false, marqueeFontUnderline = false, marqueeFontStrikeout = false;
             bool listFontBold = false, listFontItalic = false, listFontUnderline = false, listFontStrikeout = false;
             bool resultFontBold = false, resultFontItalic = false, resultFontUnderline = false, resultFontStrikeout = false;
-            Color boardColor = Color.White, paperColor = Color.White, marqueeColor = Color.Black,
-                paperFontColor = Color.Black, marqueeFontColor = Color.White, listFontColor = Color.Black, listColor = Color.White,
-                resultFontColor = Color.Black, resultColor = Color.White;
+            Color color;
+            int rgb;
 
             while (rdr.Read())
             {
                 string name = rdr.GetString(0);
-                int color = -1;
 
                 switch (name)
                 {
@@ -72,28 +74,52 @@ namespace JSY_Lottery
                         }
                         break;
                     case "boardColor":
-                        color = rdr.GetInt32(1);
-                        boardColor = Color.FromArgb(color);
-                        ClgBoard.Color = boardColor;
-                        BtnBColor.BackColor = boardColor;
+                        if(int.TryParse(rdr.GetString(1), out rgb))
+                        {
+                            color = Color.FromArgb(rgb);
+                        }
+                        else
+                        {
+                            color = Color.White;
+                        }
+                        ClgBoard.Color = color;
+                        BtnBColor.BackColor = color;
                         break;
                     case "paperColor":
-                        color = rdr.GetInt32(1);
-                        paperColor = Color.FromArgb(color);
-                        ClgPaper.Color = paperColor;
-                        BtnPColor.BackColor = paperColor;
+                        if (int.TryParse(rdr.GetString(1), out rgb))
+                        {
+                            color = Color.FromArgb(rgb);
+                        }
+                        else
+                        {
+                            color = Color.White;
+                        }
+                        ClgPaper.Color = color;
+                        BtnPColor.BackColor = color;
                         break;
                     case "marqueeColor":
-                        color = rdr.GetInt32(1);
-                        marqueeColor = Color.FromArgb(color);
-                        ClgMarquee.Color = marqueeColor;
-                        BtnMColor.BackColor = marqueeColor;
+                        if (int.TryParse(rdr.GetString(1), out rgb))
+                        {
+                            color = Color.FromArgb(rgb);
+                        }
+                        else
+                        {
+                            color = Color.Black;
+                        }
+                        ClgMarquee.Color = color;
+                        BtnMColor.BackColor = color;
                         break;
                     case "paperFontColor":
-                        color = rdr.GetInt32(1);
-                        paperFontColor = Color.FromArgb(color);
-                        ClgPFont.Color = paperFontColor;
-                        BtnPFont.BackColor = paperFontColor;
+                        if (int.TryParse(rdr.GetString(1), out rgb))
+                        {
+                            color = Color.FromArgb(rgb);
+                        }
+                        else
+                        {
+                            color = Color.White;
+                        }
+                        ClgPFont.Color = color;
+                        BtnPFont.BackColor = color;
                         break;
                     case "paperFontFamily":
                         paperFontFamily = rdr.GetString(1);
@@ -102,22 +128,28 @@ namespace JSY_Lottery
                         paperFontSize = rdr.GetFloat(1);
                         break;
                     case "paperFontBold":
-                        paperFontBold = rdr.GetString(1) == "True" ? true : false;
+                        paperFontBold = rdr.GetString(1) == "True";
                         break;
                     case "paperFontItelic":
-                        paperFontItalic = rdr.GetString(1) == "True" ? true : false;
+                        paperFontItalic = rdr.GetString(1) == "True";
                         break;
                     case "paperFontUnderline":
-                        paperFontUnderline = rdr.GetString(1) == "True" ? true : false;
+                        paperFontUnderline = rdr.GetString(1) == "True";
                         break;
                     case "paperFontStrike":
-                        paperFontStrikeout = rdr.GetString(1) == "True" ? true : false;
+                        paperFontStrikeout = rdr.GetString(1) == "True";
                         break;
                     case "marqueeFontColor":
-                        color = rdr.GetInt32(1);
-                        marqueeFontColor = Color.FromArgb(color);
-                        ClgMFont.Color = marqueeFontColor;
-                        BtnMFont.BackColor = marqueeFontColor;
+                        if (int.TryParse(rdr.GetString(1), out rgb))
+                        {
+                            color = Color.FromArgb(rgb);
+                        }
+                        else
+                        {
+                            color = Color.White;
+                        }
+                        ClgMFont.Color = color;
+                        BtnMFont.BackColor = color;
                         break;
                     case "marqueeFontFamily":
                         marqueeFontFamily = rdr.GetString(1);
@@ -126,23 +158,29 @@ namespace JSY_Lottery
                         marqueeFontSize = rdr.GetFloat(1);
                         break;
                     case "marqueeFontBold":
-                        marqueeFontBold = rdr.GetString(1) == "True" ? true : false;
+                        marqueeFontBold = rdr.GetString(1) == "True";
                         break;
                     case "marqueeFontItelic":
-                        marqueeFontItalic = rdr.GetString(1) == "True" ? true : false;
+                        marqueeFontItalic = rdr.GetString(1) == "True";
                         break;
                     case "marqueeFontUnderline":
-                        marqueeFontUnderline = rdr.GetString(1) == "True" ? true : false;
+                        marqueeFontUnderline = rdr.GetString(1) == "True";
                         break;
                     case "marqueeFontStrike":
-                        marqueeFontStrikeout = rdr.GetString(1) == "True" ? true : false;
+                        marqueeFontStrikeout = rdr.GetString(1) == "True";
                         break;
                     // -- 추가분
                     case "listFontColor":
-                        color = rdr.GetInt32(1);
-                        listFontColor = Color.FromArgb(color);
-                        ClgLFont.Color = listFontColor;
-                        BtnLFont.BackColor = listFontColor;
+                        if (int.TryParse(rdr.GetString(1), out rgb))
+                        {
+                            color = Color.FromArgb(rgb);
+                        }
+                        else
+                        {
+                            color = Color.Black;
+                        }
+                        ClgLFont.Color = color;
+                        BtnLFont.BackColor = color;
                         break;
                     case "listFontFamily":
                         listFontFamily = rdr.GetString(1);
@@ -151,28 +189,40 @@ namespace JSY_Lottery
                         listFontSize = rdr.GetFloat(1);
                         break;
                     case "listFontBold":
-                        listFontBold = rdr.GetString(1) == "True" ? true : false;
+                        listFontBold = rdr.GetString(1) == "True";
                         break;
                     case "listFontItelic":
-                        listFontItalic = rdr.GetString(1) == "True" ? true : false;
+                        listFontItalic = rdr.GetString(1) == "True";
                         break;
                     case "listFontUnderline":
-                        listFontUnderline = rdr.GetString(1) == "True" ? true : false;
+                        listFontUnderline = rdr.GetString(1) == "True";
                         break;
                     case "listFontStrike":
-                        listFontStrikeout = rdr.GetString(1) == "True" ? true : false;
+                        listFontStrikeout = rdr.GetString(1) == "True";
                         break;
                     case "listColor":
-                        color = rdr.GetInt32(1);
-                        listColor = Color.FromArgb(color);
-                        ClgList.Color = listColor;
-                        BtnLColor.BackColor = listColor;
+                        if (int.TryParse(rdr.GetString(1), out rgb))
+                        {
+                            color = Color.FromArgb(rgb);
+                        }
+                        else
+                        {
+                            color = Color.White;
+                        }
+                        ClgList.Color = color;
+                        BtnLColor.BackColor = color;
                         break;
                     case "resultFontColor":
-                        color = rdr.GetInt32(1);
-                        resultFontColor = Color.FromArgb(color);
-                        ClgRFont.Color = resultFontColor;
-                        BtnRFont.BackColor = resultFontColor;
+                        if (int.TryParse(rdr.GetString(1), out rgb))
+                        {
+                            color = Color.FromArgb(rgb);
+                        }
+                        else
+                        {
+                            color = Color.White;
+                        }
+                        ClgRFont.Color = color;
+                        BtnRFont.BackColor = color;
                         break;
                     case "resultFontFamily":
                         resultFontFamily = rdr.GetString(1);
@@ -181,72 +231,74 @@ namespace JSY_Lottery
                         resultFontSize = rdr.GetFloat(1);
                         break;
                     case "resultFontBold":
-                        resultFontBold = rdr.GetString(1) == "True" ? true : false;
+                        resultFontBold = rdr.GetString(1) == "True";
                         break;
                     case "resultFontItelic":
-                        resultFontItalic = rdr.GetString(1) == "True" ? true : false;
+                        resultFontItalic = rdr.GetString(1) == "True";
                         break;
                     case "resultFontUnderline":
-                        resultFontUnderline = rdr.GetString(1) == "True" ? true : false;
+                        resultFontUnderline = rdr.GetString(1) == "True";
                         break;
                     case "resultFontStrike":
-                        resultFontStrikeout = rdr.GetString(1) == "True" ? true : false;
+                        resultFontStrikeout = rdr.GetString(1) == "True";
                         break;
                     case "resultColor":
-                        color = rdr.GetInt32(1);
-                        resultColor = Color.FromArgb(color);
-                        ClgResult.Color = resultColor;
-                        BtnRColor.BackColor = resultColor;
+                        if (int.TryParse(rdr.GetString(1), out rgb))
+                        {
+                            color = Color.FromArgb(rgb);
+                        }
+                        else
+                        {
+                            color = Color.Black;
+                        }
+                        ClgResult.Color = color;
+                        BtnRColor.BackColor = color;
                         break;
                 }
             }
 
-            Font paperFont = new Font(paperFontFamily, paperFontSize, (paperFontBold ? FontStyle.Bold : FontStyle.Regular) |
+            Font paperFont = new(paperFontFamily, paperFontSize, (paperFontBold ? FontStyle.Bold : FontStyle.Regular) |
                 (paperFontItalic ? FontStyle.Italic : FontStyle.Regular) | (paperFontUnderline ? FontStyle.Underline : FontStyle.Regular) |
                 (paperFontStrikeout ? FontStyle.Strikeout : FontStyle.Regular));
-            Font txtFont = new Font(paperFont.FontFamily, 9F, paperFont.Style);
-            TxtPFont.Font = txtFont;
+            TxtPFont.Font = new(paperFont.FontFamily, 9F, paperFont.Style);
             FlgPaper.Font = paperFont;
 
-            Font marqueeFont = new Font(marqueeFontFamily, marqueeFontSize, (marqueeFontBold ? FontStyle.Bold : FontStyle.Regular) |
+            Font marqueeFont = new(marqueeFontFamily, marqueeFontSize, (marqueeFontBold ? FontStyle.Bold : FontStyle.Regular) |
                 (marqueeFontItalic ? FontStyle.Italic : FontStyle.Regular) | (marqueeFontUnderline ? FontStyle.Underline : FontStyle.Regular) |
                 (marqueeFontStrikeout ? FontStyle.Strikeout : FontStyle.Regular));
-            txtFont = new Font(marqueeFont.FontFamily, 9F, marqueeFont.Style);
-            TxtMFont.Font = txtFont;
+            TxtMFont.Font = new(marqueeFont.FontFamily, 9F, marqueeFont.Style);
             FlgMarquee.Font = marqueeFont;
 
-            Font listFont = new Font(listFontFamily, listFontSize, (listFontBold ? FontStyle.Bold : FontStyle.Regular) |
+            Font listFont = new(listFontFamily, listFontSize, (listFontBold ? FontStyle.Bold : FontStyle.Regular) |
                 (listFontItalic ? FontStyle.Italic : FontStyle.Regular) | (listFontUnderline ? FontStyle.Underline : FontStyle.Regular) |
                 (listFontStrikeout ? FontStyle.Strikeout : FontStyle.Regular));
-            txtFont = new Font(listFont.FontFamily, 9F, marqueeFont.Style);
-            TxtLFont.Font = txtFont;
+            TxtLFont.Font = new(listFont.FontFamily, 9F, marqueeFont.Style);
             FlgList.Font = listFont;
 
-            Font resultFont = new Font(marqueeFontFamily, marqueeFontSize, (marqueeFontBold ? FontStyle.Bold : FontStyle.Regular) |
-                (marqueeFontItalic ? FontStyle.Italic : FontStyle.Regular) | (marqueeFontUnderline ? FontStyle.Underline : FontStyle.Regular) |
-                (marqueeFontStrikeout ? FontStyle.Strikeout : FontStyle.Regular));
-            txtFont = new Font(resultFont.FontFamily, 9F, resultFont.Style);
-            TxtRFont.Font = txtFont;
+            Font resultFont = new(resultFontFamily, resultFontSize, (resultFontBold ? FontStyle.Bold : FontStyle.Regular) |
+                (resultFontItalic ? FontStyle.Italic : FontStyle.Regular) | (resultFontUnderline ? FontStyle.Underline : FontStyle.Regular) |
+                (resultFontStrikeout ? FontStyle.Strikeout : FontStyle.Regular));
+            TxtRFont.Font = new(resultFont.FontFamily, 9F, resultFont.Style);
             FlgResult.Font = resultFont;
         }
 
-        private void loadBenefit()
+        private void LoadBenefit()
         {
             string sql = "SELECT * FROM tbBenefit";
-            SqliteCommand cmd = new SqliteCommand(sql, _benefitConn);
+            SqliteCommand cmd = new(sql, BenefitConn);
             SqliteDataReader rdr = cmd.ExecuteReader();
             while (rdr.Read())
             {
                 int nRow = DgvBenefit.Rows.Add(rdr.GetInt32(0), rdr.GetString(1), rdr.GetInt32(2), rdr.GetString(3), null);
                 string soundFile = rdr[4] is System.DBNull ? "" : rdr.GetString(4);
 
-                DataGridViewComboBoxCell cCell = new DataGridViewComboBoxCell
+                DataGridViewComboBoxCell cCell = new()
                 {
                     DisplayStyle = DataGridViewComboBoxDisplayStyle.ComboBox
                 };
 
                 cCell.Items.Add("");
-                DirectoryInfo soundDir = new DirectoryInfo(Application.StartupPath + @"sound");
+                DirectoryInfo soundDir = new(Application.StartupPath + @"sound");
                 foreach (FileInfo file in soundDir.GetFiles())
                 {
                     cCell.Items.Add(file.Name);
@@ -263,7 +315,7 @@ namespace JSY_Lottery
         {
             if (FlgPaper.ShowDialog(this) == DialogResult.OK)
             {
-                Font txtFont = new Font(FlgPaper.Font.FontFamily, 9F, FlgPaper.Font.Style);
+                Font txtFont = new(FlgPaper.Font.FontFamily, 9F, FlgPaper.Font.Style);
                 TxtPFont.Font = txtFont;
             }
         }
@@ -288,7 +340,7 @@ namespace JSY_Lottery
         {
             if (FlgMarquee.ShowDialog(this) == DialogResult.OK)
             {
-                Font txtFont = new Font(FlgMarquee.Font.FontFamily, 9F, FlgMarquee.Font.Style);
+                Font txtFont = new(FlgMarquee.Font.FontFamily, 9F, FlgMarquee.Font.Style);
                 TxtMFont.Font = txtFont;
             }
         }
@@ -301,7 +353,7 @@ namespace JSY_Lottery
             }
         }
 
-        private void btnOK_Click(object sender, EventArgs e)
+        private void BtnOK_Click(object sender, EventArgs e)
         {
             if (MessageBox.Show("변경하신 내용을 적용하시겠습니까?", "환경설정 적용확인", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
@@ -309,7 +361,7 @@ namespace JSY_Lottery
                 // 설정부분
                 // 기존거 삭제
                 string sql = "DELETE FROM tbConfig";
-                SqliteCommand cmd = new SqliteCommand(sql, _configConn);
+                SqliteCommand cmd = new(sql, ConfigConn);
                 cmd.ExecuteNonQuery();
 
                 Font paperFont = FlgPaper.Font;
@@ -318,16 +370,16 @@ namespace JSY_Lottery
                 Font resultFont = FlgResult.Font;
 
                 sql = "INSERT INTO tbConfig(configValue, configName) VALUES(@param1, @param2)";
-                cmd = new SqliteCommand(sql, _configConn);
+                cmd = new(sql, ConfigConn);
 
                 cmd.Parameters.Clear();
-                cmd.Parameters.Add(new SqliteParameter("@param1", ClgPFont.Color.ToArgb().ToString()));
-                cmd.Parameters.Add(new SqliteParameter("@param2", "paperFontColor"));
+                cmd.Parameters.Add(new("@param1", ClgPFont.Color.ToArgb().ToString()));
+                cmd.Parameters.Add(new("@param2", "paperFontColor"));
                 cmd.ExecuteNonQuery();
 
                 cmd.Parameters.Clear();
-                cmd.Parameters.Add(new SqliteParameter("@param1", paperFont.FontFamily.Name));
-                cmd.Parameters.Add(new SqliteParameter("@param2", "paperFontFamily"));
+                cmd.Parameters.Add(new("@param1", paperFont.FontFamily.Name));
+                cmd.Parameters.Add(new("@param2", "paperFontFamily"));
                 cmd.ExecuteNonQuery();
 
                 cmd.Parameters.Clear();
@@ -499,7 +551,7 @@ namespace JSY_Lottery
                 // 상부분
                 // 모두 지우고
                 sql = "DELETE FROM tbBenefit";
-                cmd = new SqliteCommand(sql, _benefitConn);
+                cmd = new SqliteCommand(sql, BenefitConn);
                 cmd.ExecuteNonQuery();
 
                 for (int row = 0; row < DgvBenefit.Rows.Count; row++)
@@ -510,7 +562,7 @@ namespace JSY_Lottery
                     }
                     string insertSql = "INSERT INTO tbBenefit(seq, benefit_name, benefit_count, benefit_desc, benefit_sound) VALUES(@p1, @p2, @p3, @p4, @p5)";
 
-                    cmd = new SqliteCommand(insertSql, _benefitConn);
+                    cmd = new SqliteCommand(insertSql, BenefitConn);
                     cmd.Parameters.Clear();
                     cmd.Parameters.Add(new SqliteParameter("@p1", DgvBenefit.Rows[row].Cells[0].Value));
                     cmd.Parameters.Add(new SqliteParameter("@p2", DgvBenefit.Rows[row].Cells[1].Value));
@@ -520,9 +572,9 @@ namespace JSY_Lottery
                     try
                     {
                         DataGridViewComboBoxCell cb = (DataGridViewComboBoxCell)DgvBenefit.Rows[row].Cells[4];
-                        string soundFile = cb.Value is null ? "" : cb.Value.ToString();
+                        string soundFile = cb.Value?.ToString() ?? string.Empty;
 
-                        if (soundFile != "")
+                        if (!string.IsNullOrEmpty(soundFile))
                         {
                             string soundPath = Application.StartupPath + @"sound\" + soundFile;
                             cmd.Parameters.Add(new SqliteParameter("@p5", soundPath));
@@ -532,11 +584,11 @@ namespace JSY_Lottery
                             cmd.Parameters.Add(new SqliteParameter("@p5", ""));
                         }
                     }
-                    catch(Exception ex)
+                    catch(Exception)
                     {
                         cmd.Parameters.Add(new SqliteParameter("@p5", ""));
                     }
-                    int res = cmd.ExecuteNonQuery();
+                    cmd.ExecuteNonQuery();
                 }
 
                 // 메인의 어플라이 부르고
@@ -547,7 +599,7 @@ namespace JSY_Lottery
             }
         }
 
-        private void btnCancel_Click(object sender, EventArgs e)
+        private void BtnCancel_Click(object sender, EventArgs e)
         {
             if (MessageBox.Show("변경하신 내용이 취소됩니다. 정말 취소하시겠습니까?", "환경설정 취소확인", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
@@ -607,7 +659,7 @@ namespace JSY_Lottery
         {
             if (FlgResult.ShowDialog(this) == DialogResult.OK)
             {
-                Font txtFont = new Font(FlgPaper.Font.FontFamily, 9F, FlgPaper.Font.Style);
+                Font txtFont = new(FlgPaper.Font.FontFamily, 9F, FlgPaper.Font.Style);
                 TxtRFont.Font = txtFont;
             }
         }
@@ -616,7 +668,7 @@ namespace JSY_Lottery
         {
             if (FlgList.ShowDialog(this) == DialogResult.OK)
             {
-                Font txtFont = new Font(FlgPaper.Font.FontFamily, 9F, FlgPaper.Font.Style);
+                Font txtFont = new(FlgPaper.Font.FontFamily, 9F, FlgPaper.Font.Style);
                 TxtLFont.Font = txtFont;
             }
         }
