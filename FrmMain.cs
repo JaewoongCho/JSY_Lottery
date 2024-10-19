@@ -43,7 +43,7 @@ namespace JSY_Lottery
         readonly private WindowsMediaPlayer wmp = new();
 
         readonly Dictionary<int, ArrayList> dic = new();
-        Dictionary<string, int> benefitDic = new();
+        readonly Dictionary<string, int> benefitDic = new();
 
         private static void CheckConfigFile()
         {
