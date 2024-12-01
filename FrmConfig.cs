@@ -33,7 +33,12 @@ namespace JSY_Lottery
             DgvBenefit.Columns.Add("col2", "등수");
             DgvBenefit.Columns.Add("col3", "개수");
             DgvBenefit.Columns.Add("col4", "설명");
-            DgvBenefit.Columns.Add("col5", "소리파일");
+            DataGridViewComboBoxColumn col5 = new()
+            {
+                Name = "col5",
+                HeaderText = "소리파일"
+            };
+            DgvBenefit.Columns.Add(col5);
             // Config대로 일단 데이터 넣기
             LoadConfig();
             LoadBenefit();
@@ -289,25 +294,30 @@ namespace JSY_Lottery
             SqliteDataReader rdr = cmd.ExecuteReader();
             while (rdr.Read())
             {
-                int nRow = DgvBenefit.Rows.Add(rdr.GetInt32(0), rdr.GetString(1), rdr.GetInt32(2), rdr.GetString(3), null);
+                DataGridViewRow dgvRow = new DataGridViewRow();
+                dgvRow.CreateCells(DgvBenefit);
+                dgvRow.Cells[0].Value = rdr.GetInt32(0);
+                dgvRow.Cells[1].Value = rdr.GetString(0);
+                dgvRow.Cells[2].Value = rdr.GetInt32(0);
+                dgvRow.Cells[3].Value = rdr.GetString(0);
+
                 string soundFile = rdr[4] is System.DBNull ? "" : rdr.GetString(4);
 
-                DataGridViewComboBoxCell cCell = new()
+                if (dgvRow.Cells[4] is DataGridViewComboBoxCell cCell)
                 {
-                    DisplayStyle = DataGridViewComboBoxDisplayStyle.ComboBox
-                };
+                    DirectoryInfo soundDir = new(Application.StartupPath + @"sound");
+                    foreach (FileInfo file in soundDir.GetFiles())
+                    {
+                        cCell.Items.Add(file.Name);
+                    }
 
-                cCell.Items.Add("");
-                DirectoryInfo soundDir = new(Application.StartupPath + @"sound");
-                foreach (FileInfo file in soundDir.GetFiles())
-                {
-                    cCell.Items.Add(file.Name);
+                    if (soundFile != "")
+                    {
+                        cCell.Value = (new FileInfo(soundFile)).Name;
+                    }
                 }
-                if (soundFile != "")
-                {
-                    cCell.Value = (new FileInfo(soundFile)).Name;
-                }
-                DgvBenefit.Rows[nRow].Cells[4] = cCell;
+
+                DgvBenefit.Rows.Add(dgvRow);
             }
         }
 
